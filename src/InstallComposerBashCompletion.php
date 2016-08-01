@@ -23,8 +23,8 @@ class InstallComposerBashCompletion extends Command
     {
         $question = $this->getHelper('question'); /* @var $question \Symfony\Component\Console\Helper\QuestionHelper */
         $target = $question->ask($input, $output, new Question(
-                '<question>Where to put the completion file? [/usr/share/bash-completion/completions/composer]</question>',
-                '/usr/share/bash-completion/completions/composer'
+            '<question>Where to put the completion file? [/usr/share/bash-completion/completions/composer]</question>',
+            '/usr/share/bash-completion/completions/composer'
         ));
 
         try {
@@ -37,6 +37,8 @@ class InstallComposerBashCompletion extends Command
             $output->writeln("<error>Could not write to $target. Do you need sudo permissions?</error>");
             return 1;
         }
-
+        $output->writeln(
+            "<info>Successfully installed the lastest version of iArren's composer bash completion</info>"
+        );
     }
 }
