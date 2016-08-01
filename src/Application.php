@@ -10,6 +10,7 @@ class Application extends SymfonyApplication
     {
         $defaultCommands = parent::getDefaultCommands();
         $defaultCommands[] = new InstallComposerBashCompletion();
+        $defaultCommands[] = new InstallSymfonyShortcuts();
         return $defaultCommands;
     }
 }
