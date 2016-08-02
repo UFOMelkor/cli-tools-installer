@@ -1,7 +1,0 @@
-#!/bin/bash
-if [ -f `pwd`/app/console ]
-then
-    php `pwd`/app/console --env=prod --no-debug --ansi $@
-else
-    php `pwd`/bin/console --env=prod --no-debug --ansi $@
-fi

@@ -1,5 +1,6 @@
 #!/usr/bin/env php
 <?php
+declare(strict_types=1);
 function includeIfExists($file)
 {
     if (file_exists($file)) {
@@ -16,5 +17,5 @@ if (
         'php composer.phar install'.PHP_EOL
     );
 }
-$app = new UFOMelkor\CliTools\Application('CLI-Tools installer by Oskar Pfeifer-Bley (https://twitter.com/UFOMelkor)', 'develop');
+$app = new UFOMelkor\CliTools\Application('CLI-Tools installer by Oskar Pfeifer-Bley (https://twitter.com/UFOMelkor)', 'develop', get_current_user(), getenv('HOME'));
 $app->run();
