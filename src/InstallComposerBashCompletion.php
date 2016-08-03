@@ -44,13 +44,6 @@ HELP
             return 0;
         }
 
-        try {
-            $script = (string) (new Client())->get(self::SOURCE)->getBody();
-        } catch (Exception $exception) {
-            $io->error('Could not grab the completion file from ' . self::SOURCE);
-            return 1;
-        }
-
         $target = $this->config->getBashCompletionPath($io);
         $fileName = 'composer';
         if (! is_dir($target)) {
@@ -60,36 +53,85 @@ HELP
         }
         $target = "$target/$fileName";
 
-        if (file_exists($target)) {
-            $currentContent = file_get_contents($target);
-            if ($currentContent !== $script) {
-                if (! @file_put_contents($target, $script)) {
-                    $io->error("Could not write to $target.");
-                    return 1;
-                }
-                $io->text("Updated the bash completion in $target.");
-            } else {
-                $io->text("The latest version is already installed in $target.");
-            }
-        } else {
-            if (! @file_put_contents($target, $script)) {
-                $io->error("Could not write to $target.");
-                return 1;
-            }
-            $io->text("Installed the bash completion in $target.");
+        if (! $this->createOrUpdateCompletionFile($io, $target)) {
+            return 1;
         }
 
         if (isset($completionLoadingFilePath)
-            && ! $this->createCompletionFile($io, $completionLoadingFilePath, $target)
+            && ! $this->createCompletionLoadingFile($io, $completionLoadingFilePath, $target)
         ) {
             return 1;
         }
 
         $io->success('Installed the latest version of iArren\'s composer bash completion.');
+        $io->note('Remember to start a new console to activate this changes');
         return 0;
     }
 
-    private function createCompletionFile(
+    private function createOrUpdateCompletionFile(StyleInterface $io, string $filePath): bool
+    {
+        try {
+            $script = (string) (new Client())->get(self::SOURCE)->getBody();
+        } catch (Exception $exception) {
+            $io->error('Could not grab the completion file from ' . self::SOURCE);
+            return false;
+        }
+
+        $currentAliases = '';
+        $aliasFile = $this->config->getHomeDirectory($io) . '/.alias';
+        if (! $this->config->isGlobalInstallation($io)) {
+            $currentAliases = file_exists($aliasFile) ? file_get_contents($aliasFile) : '';
+            preg_match('/alias ([^=]*)=composer/', $currentAliases, $matches);
+            if (count($matches) > 1) {
+                $alias = $matches[1];
+            }
+        }
+
+        $hasAnAlias = isset($alias) || $io->confirm('Do you have an alias for composer?', false);
+        if (! $hasAnAlias
+            && ! $this->config->isGlobalInstallation($io)
+            && $io->confirm('Do you want to setup an alias?')
+        ) {
+            $alias = $io->ask('Which alias should be setup?', 'c');
+            $currentAliases = trim($currentAliases . "\nalias $alias=composer");
+
+            if (! file_put_contents($aliasFile, $currentAliases)) {
+                $io->error("Could not write to $aliasFile");
+                return false;
+            }
+            $hasAnAlias = true;
+        }
+        if ($hasAnAlias) {
+            if (! isset($alias)) {
+                $alias = $io->ask('What is your composer alias?');
+            }
+            $script = trim($script) . "\ncomplete -F _composer $alias\n";
+        } else {
+            $io->askHidden('Why not?');
+        }
+
+        if (file_exists($filePath)) {
+            $currentContent = file_get_contents($filePath);
+            if ($currentContent !== $script) {
+                if (! @file_put_contents($filePath, $script)) {
+                    $io->error("Could not write to $filePath.");
+                    return false;
+                }
+                $io->text("Updated the bash completion in $filePath.");
+            } else {
+                $io->text("The latest version is already installed in $filePath.");
+            }
+        } else {
+            if (! @file_put_contents($filePath, $script)) {
+                $io->error("Could not write to $filePath.");
+                return false;
+            }
+            $io->text("Installed the bash completion in $filePath.");
+        }
+        return true;
+    }
+
+    private function createCompletionLoadingFile(
         StyleInterface $io,
         string $completionLoadingFilePath,
         string $completionFilePath

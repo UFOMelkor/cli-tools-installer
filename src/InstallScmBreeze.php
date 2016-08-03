@@ -88,22 +88,35 @@ HELP
 
     private function setUpRepositoryIndex(StyleInterface $io, string $homeDirectory): bool
     {
-        $currentContent = file_get_contents("$homeDirectory/.git.scmbrc");
-        if (strpos($currentContent, 'export GIT_REPO_DIR="$HOME/code"') === false) {
-            return true;
+        $configContent = file_get_contents("$homeDirectory/.git.scmbrc");
+        $modified = false;
+
+        preg_match('/^git_index_alias="([^"]*)"/m', $configContent, $matches);
+        $alias = $matches[1];
+        if ($alias !== ($newAlias = $io->ask('What shortcut would you use for jumping to repositories?', $alias))) {
+            $configContent = preg_replace('/^(git_index_alias=")([^"]*)(.*)/m', "$1$newAlias$3", $configContent);
+            $modified = true;
+            $alias = $newAlias;
         }
-        if ($io->confirm('Would you like to setup the repository index to jump to repositories using c $NAME?')) {
-            $path = $io->ask('Where do you store you repositories?', '~/public_html');
-            $updateSuccessful = @file_put_contents("$homeDirectory/.git.scmbrc", str_replace(
-                'export GIT_REPO_DIR="$HOME/code"',
-                "export GIT_REPO_DIR=\"$path\"",
-                $currentContent
-            ));
+
+        preg_match('/^export GIT_REPO_DIR="([^"]*)"/m', $configContent, $matches);
+        $dir = $matches[1];
+        if ($dir !== ($newDir = $io->ask('In which directory are your repositories stored?', $dir))) {
+            $configContent = preg_replace('/^(export GIT_REPO_DIR=")([^"]*)(.*)/m', "$1$newDir$3", $configContent);
+            $modified = true;
+            $dir = $newDir;
+        }
+
+        if ($modified) {
+            $updateSuccessful = @file_put_contents("$homeDirectory/.git.scmbrc", $configContent);
             if (! $updateSuccessful) {
                 $io->error("Could not write to $homeDirectory/.git.scmbrc");
                 return false;
             }
-            $io->text("Updated GIT_REPO_DIR to $path");
+            $io->text(
+                'Updated the configuration for repository jumping. '
+                . "Use $alias <NAME> to jump to any repository that is located in $dir"
+            );
         }
         return true;
     }
