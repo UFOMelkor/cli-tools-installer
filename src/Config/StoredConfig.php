@@ -5,7 +5,7 @@ namespace UFOMelkor\CliTools\Config;
 use Piwik\Ini\IniReader;
 use Piwik\Ini\IniReadingException;
 use Piwik\Ini\IniWriter;
-use UFOMelkor\CliTools\Output;
+use Symfony\Component\Console\Style\StyleInterface;
 
 class StoredConfig implements Config
 {
@@ -45,31 +45,35 @@ class StoredConfig implements Config
         call_user_func($this->writing, $this->config);
     }
 
-    public function isForcingAnsi(Output $output): bool
+    public function isGlobalInstallation(StyleInterface $io): bool
+    {
+        return $this->decorated->isGlobalInstallation($io);
+    }
+
+    public function isForcingAnsi(StyleInterface $io): bool
     {
         if (! isset($this->config['global']['ansi'])) {
-            $this->config['global']['ansi'] = $this->decorated->isForcingAnsi($output);
+            $this->config['global']['ansi'] = $this->decorated->isForcingAnsi($io);
             $this->store();
         }
         return (bool) $this->config['global']['ansi'];
     }
 
-    public function getBinDirectory(Output $output): string
+    public function getBinDirectory(StyleInterface $io): string
     {
         if (! isset($this->config['global']['bin_directory'])) {
-            $this->config['global']['bin_directory'] = $this->decorated->getBinDirectory($output);
+            $this->config['global']['bin_directory'] = $this->decorated->getBinDirectory($io);
             $this->store();
         }
         return rtrim($this->config['global']['bin_directory'], '/');
     }
 
-    public function getBashCompletionDirectory(Output $output): string
+    public function getBashCompletionPath(StyleInterface $io): string
     {
-        if (! isset($this->config['global']['bash_completion_directory'])) {
-            $this->config['global']['bash_completion_directory'] = $this->decorated
-                ->getBashCompletionDirectory($output);
+        if (! isset($this->config['global']['bash_completion_path'])) {
+            $this->config['global']['bash_completion_path'] = $this->decorated->getBashCompletionPath($io);
             $this->store();
         }
-        return rtrim($this->config['global']['bash_completion_directory'], '/');
+        return rtrim($this->config['global']['bash_completion_path'], '/');
     }
 }

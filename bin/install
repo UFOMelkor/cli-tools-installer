@@ -17,5 +17,5 @@ if (
         'php composer.phar install'.PHP_EOL
     );
 }
-$app = new UFOMelkor\CliTools\Application('CLI-Tools installer by Oskar Pfeifer-Bley (https://twitter.com/UFOMelkor)', 'develop', get_current_user(), getenv('HOME'));
+$app = new UFOMelkor\CliTools\Application('CLI-Tools installer by Oskar Pfeifer-Bley (https://twitter.com/UFOMelkor)', 'develop',  getenv('USERNAME') ?: getenv('USER'), getenv('HOME'));
 $app->run();

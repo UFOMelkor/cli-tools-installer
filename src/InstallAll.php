@@ -5,6 +5,7 @@ namespace UFOMelkor\CliTools;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 class InstallAll extends Command
 {
@@ -16,7 +17,15 @@ class InstallAll extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->getApplication()->find('symfony:console:shortcuts')->execute($input, $output);
-        $this->getApplication()->find('composer:completion:bash')->execute($input, $output);
+        $io = new SymfonyStyle($input, $output);
+        $commands = ['symfony:console:shortcuts', 'composer:completion:bash'];
+        $application = $this->getApplication();
+        $io->progressStart(count($commands));
+
+        foreach ($commands as $each) {
+            $application->find($each)->execute($input, $output);
+            $io->progressAdvance();
+        }
+        $io->progressFinish();
     }
 }

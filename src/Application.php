@@ -29,7 +29,7 @@ class Application extends SymfonyApplication
         $defaultCommands = parent::getDefaultCommands();
         $defaultCommands[] = new InstallAll();
         $defaultCommands[] = new InstallComposerBashCompletion($config);
-        $defaultCommands[] = new InstallSymfonyShortcuts($config, $twig);
+        $defaultCommands[] = new InstallSymfonyConsoleShortcuts($config, $twig);
         return $defaultCommands;
     }
 }

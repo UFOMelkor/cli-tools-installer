@@ -2,8 +2,8 @@
 declare(strict_types = 1);
 namespace UFOMelkor\CliTools\Config;
 
-use UFOMelkor\CliTools\HumanInteractionNeeded;
-use UFOMelkor\CliTools\Output;
+use RuntimeException;
+use Symfony\Component\Console\Style\StyleInterface;
 
 final class InteractiveConfig implements Config
 {
@@ -19,71 +19,49 @@ final class InteractiveConfig implements Config
         $this->homeDirectory = $homeDirectory;
     }
 
-    public function isForcingAnsi(Output $output): bool
+    public function isGlobalInstallation(StyleInterface $io): bool
     {
-        return $output->confirm('Would you like to force ansi output?', true);
+        return $this->user === 'root';
     }
 
-    public function getBinDirectory(Output $output): string
+    public function isForcingAnsi(StyleInterface $io): bool
     {
-        return $this->untilItExistsAndIsWritable(function () use ($output) {
-            return $output->ask(
-                'Where should bin files be put?',
-                $this->user === 'root' ? '/usr/local/bin' : $this->normalizePath('~/bin')
-            );
-        }, $output, 'the default bin directory %s could not be created or is not writable');
+        return $io->confirm('Would you like to force ansi output?', true);
     }
 
-    public function getBashCompletionDirectory(Output $output): string
+    public function getBinDirectory(StyleInterface $io): string
     {
-        return $this->untilItsWritable(function () use ($output) {
-            $default = $this->user === 'root'
-                ? '/usr/share/bash-completion/completions'
-                : $this->normalizePath('~/.bash_completion');
-            return $output->ask('Where to put your bash completion files?', $default);
-        }, $output, 'the default directory for bash completions (%s) is not writable.');
-    }
-
-    private function untilItExistsAndIsWritable(callable $callback, Output $output, string $nonInteractiveError): string
-    {
-        $path = $this->normalizePath($callback());
-
-        if (! is_dir($path)
-            && $output->confirm("The directory $path does not exist. Should it be created?")
-            && ! @mkdir($path, 0755, true)
-            && ! is_dir($path)
-        ) {
-            $output->error("Could not create the directory $path. Maybe you need sudo privileges?");
-            if (! $output->isInteractive()) {
-                throw HumanInteractionNeeded::because(sprintf($nonInteractiveError, $path));
+        $defaultDirectory = $this->isGlobalInstallation($io) ? '/usr/local/bin' : $this->normalizePath('~/bin');
+        return $io->ask('Where should executables be put?', $defaultDirectory, function ($directoryPath) {
+            if (! is_dir($directoryPath)) {
+                throw new RuntimeException("$directoryPath is no directory");
             }
-            $this->untilItExistsAndIsWritable($callback, $output, $nonInteractiveError);
-        }
-        if (! is_writable($path)) {
-            $output->error("The directory $path is not writable");
-            if (! $output->isInteractive()) {
-                throw HumanInteractionNeeded::because(sprintf($nonInteractiveError, $path));
+            if (! is_writable($directoryPath)) {
+                throw new RuntimeException("$directoryPath is not writable");
             }
-            $this->untilItExistsAndIsWritable($callback, $output, $nonInteractiveError);
-        }
-        return $path;
+            return $directoryPath;
+        });
     }
 
-    private function untilItsWritable(callable $callback, Output $output, string $nonInteractiveError): string
+    public function getBashCompletionPath(StyleInterface $io): string
     {
-        $path = $this->normalizePath($callback());
-        if (is_writable($path)) {
+        $default = $this->isGlobalInstallation($io)
+            ? '/usr/share/bash-completion/completions'
+            : $this->normalizePath('~/.bash_completion');
+        return $io->ask('Where to put your bash completion files?', $default, function (string $path) {
+            if (! is_writable($path) && ! is_writable(dirname($path))) {
+                throw new RuntimeException("Could not write to $path");
+            }
             return $path;
-        }
-        $output->error("$path is not writable.");
-        if (! $output->isInteractive()) {
-            throw HumanInteractionNeeded::because(sprintf($nonInteractiveError, $path));
-        }
-        return $this->untilItsWritable($callback, $output, $nonInteractiveError);
+        });
     }
 
     private function normalizePath(string $path): string
     {
-        return realpath(str_replace(['~', '$HOME'], getenv('HOME'), $path));
+        $path = str_replace(['~', '$HOME'], getenv('HOME'), $path);
+        if (! realpath($path) && realpath(dirname($path))) {
+            $path = realpath(dirname($path)) . '/' . basename($path);
+        }
+        return $path;
     }
 }

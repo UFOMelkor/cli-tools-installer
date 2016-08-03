@@ -2,13 +2,15 @@
 declare(strict_types = 1);
 namespace UFOMelkor\CliTools\Config;
 
-use UFOMelkor\CliTools\Output;
+use Symfony\Component\Console\Style\StyleInterface;
 
 interface Config
 {
-    public function isForcingAnsi(Output $output): bool;
+    public function isGlobalInstallation(StyleInterface $io): bool;
 
-    public function getBinDirectory(Output $output): string;
+    public function isForcingAnsi(StyleInterface $io): bool;
 
-    public function getBashCompletionDirectory(Output $output): string;
+    public function getBinDirectory(StyleInterface $io): string;
+
+    public function getBashCompletionPath(StyleInterface $io): string;
 }
