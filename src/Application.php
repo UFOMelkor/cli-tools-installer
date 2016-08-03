@@ -31,6 +31,7 @@ class Application extends SymfonyApplication
         $defaultCommands[] = new InstallComposerBashCompletion($config);
         $defaultCommands[] = new InstallSymfonyConsoleShortcuts($config, $twig);
         $defaultCommands[] = new InstallGlobalGitIgnore($config);
+        $defaultCommands[] = new InstallScmBreeze($config);
         return $defaultCommands;
     }
 }
