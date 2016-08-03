@@ -50,6 +50,11 @@ class StoredConfig implements Config
         return $this->decorated->isGlobalInstallation($io);
     }
 
+    public function getHomeDirectory(StyleInterface $io): string
+    {
+        return $this->decorated->getHomeDirectory($io);
+    }
+
     public function isForcingAnsi(StyleInterface $io): bool
     {
         if (! isset($this->config['global']['ansi'])) {
@@ -57,6 +62,15 @@ class StoredConfig implements Config
             $this->store();
         }
         return (bool) $this->config['global']['ansi'];
+    }
+
+    public function getGitBinary(StyleInterface $io): string
+    {
+        if (! isset($this->config['global']['git_binary'])) {
+            $this->config['global']['git_binary'] = $this->decorated->getGitBinary($io);
+            $this->store();
+        }
+        return $this->config['global']['git_binary'];
     }
 
     public function getBinDirectory(StyleInterface $io): string

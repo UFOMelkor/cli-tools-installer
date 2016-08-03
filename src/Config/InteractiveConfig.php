@@ -24,9 +24,24 @@ final class InteractiveConfig implements Config
         return $this->user === 'root';
     }
 
+    public function getHomeDirectory(StyleInterface $io): string
+    {
+        return $this->homeDirectory;
+    }
+
     public function isForcingAnsi(StyleInterface $io): bool
     {
         return $io->confirm('Would you like to force ansi output?', true);
+    }
+
+    public function getGitBinary(StyleInterface $io): string
+    {
+        return $io->ask('Where is your git binary?', '/usr/bin/git', function (string $gitBinary) {
+            if (! is_executable($gitBinary)) {
+                throw new RuntimeException("$gitBinary is not executable");
+            }
+            return $gitBinary;
+        });
     }
 
     public function getBinDirectory(StyleInterface $io): string
