@@ -18,7 +18,10 @@ class InstallComposerBashCompletion extends Command
     /** @var Config */
     private $config;
 
-    public function __construct(Config $config)
+    /** @var ExecutableFinder */
+    private $executables;
+
+    public function __construct(Config $config, ExecutableFinder $executables)
     {
         parent::__construct('composer:completion:bash');
         $this->setDescription('Bash completion for Composer using https://github.com/iArren/composer-bash-completion');
@@ -31,6 +34,7 @@ version.
 HELP
         );
         $this->config = $config;
+        $this->executables = $executables;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -39,6 +43,11 @@ HELP
         $io->title('Composer Bash Completion');
         $io->text(explode("\n", $this->getHelp()));
         $io->newLine(1);
+
+        if (! $this->executables->find('composer')) {
+            $io->error('You must have a executable named composer in your PATH.');
+            return 1;
+        }
 
         if (! $io->confirm('Do you want to install this tool?')) {
             return 0;
@@ -64,7 +73,7 @@ HELP
         }
 
         $io->success('Installed the latest version of iArren\'s composer bash completion.');
-        $io->note('Remember to start a new console to activate this changes');
+        $io->note('Remember to start a new console to activate this changes.');
         return 0;
     }
 

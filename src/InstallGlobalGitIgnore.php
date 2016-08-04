@@ -17,7 +17,10 @@ class InstallGlobalGitIgnore extends Command
     /** @var Config */
     private $config;
 
-    public function __construct(Config $config)
+    /** @var ExecutableFinder */
+    private $executables;
+
+    public function __construct(Config $config, ExecutableFinder $executables)
     {
         parent::__construct('git:ignore:global');
         $this->setDescription('Ignoring files in every Git repository');
@@ -31,6 +34,7 @@ to use it.
 HELP
         );
         $this->config = $config;
+        $this->executables = $executables;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -47,11 +51,21 @@ HELP
             return 1;
         }
 
+        if (! $this->executables->find('composer')) {
+            $io->error('You must have a executable named composer in your PATH.');
+            return 1;
+        }
+
+        $gitBinary = $this->executables->find('git');
+        if (! $gitBinary) {
+            $io->error('Could not find git in your PATH.');
+            return 1;
+        }
+
         if (! $io->confirm('Do you want to install this tool?')) {
             return 0;
         }
 
-        $gitBinary = $this->config->getGitBinary($io);
         $globalGitignorePath = $this->config->getHomeDirectory($io) . '/.gitignore_global';
 
         $git = new GitWrapper($gitBinary);

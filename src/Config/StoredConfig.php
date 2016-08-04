@@ -64,15 +64,6 @@ class StoredConfig implements Config
         return (bool) $this->config['global']['ansi'];
     }
 
-    public function getGitBinary(StyleInterface $io): string
-    {
-        if (! isset($this->config['global']['git_binary'])) {
-            $this->config['global']['git_binary'] = $this->decorated->getGitBinary($io);
-            $this->store();
-        }
-        return $this->config['global']['git_binary'];
-    }
-
     public function getBinDirectory(StyleInterface $io): string
     {
         if (! isset($this->config['global']['bin_directory'])) {

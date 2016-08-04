@@ -34,16 +34,6 @@ final class InteractiveConfig implements Config
         return $io->confirm('Would you like to force ansi output?', true);
     }
 
-    public function getGitBinary(StyleInterface $io): string
-    {
-        return $io->ask('Where is your git binary?', '/usr/bin/git', function (string $gitBinary) {
-            if (! is_executable($gitBinary)) {
-                throw new RuntimeException("$gitBinary is not executable");
-            }
-            return $gitBinary;
-        });
-    }
-
     public function getBinDirectory(StyleInterface $io): string
     {
         $defaultDirectory = $this->isGlobalInstallation($io) ? '/usr/local/bin' : $this->normalizePath('~/bin');

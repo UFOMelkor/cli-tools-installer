@@ -26,12 +26,13 @@ class Application extends SymfonyApplication
     {
         $config = StoredConfig::fromFile("{$this->homeDirectory}/.php_cli_tools", $this->user, $this->homeDirectory);
         $twig = new Twig_Environment(new Twig_Loader_Filesystem(__DIR__ . '/../templates'));
+        $executables = new ExecutableFinder(explode(':', getenv('PATH')));
         $defaultCommands = parent::getDefaultCommands();
         $defaultCommands[] = new InstallAll();
-        $defaultCommands[] = new InstallComposerBashCompletion($config);
+        $defaultCommands[] = new InstallComposerBashCompletion($config, $executables);
         $defaultCommands[] = new InstallSymfonyConsoleShortcuts($config, $twig);
-        $defaultCommands[] = new InstallGlobalGitIgnore($config);
-        $defaultCommands[] = new InstallScmBreeze($config);
+        $defaultCommands[] = new InstallGlobalGitIgnore($config, $executables);
+        $defaultCommands[] = new InstallScmBreeze($config, $executables);
         return $defaultCommands;
     }
 }

@@ -8,8 +8,6 @@ interface Config
 {
     public function isGlobalInstallation(StyleInterface $io): bool;
 
-    public function getGitBinary(StyleInterface $io): string;
-
     public function isForcingAnsi(StyleInterface $io): bool;
 
     public function getBinDirectory(StyleInterface $io): string;
