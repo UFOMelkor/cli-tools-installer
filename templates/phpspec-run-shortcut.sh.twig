@@ -1,0 +1,7 @@
+#!/bin/bash
+if [ -f `pwd`/bin/phpspec ]
+then
+    php `pwd`/bin/phpspec run{% if ansi %} --ansi{% endif %} $@
+else
+    php `pwd`/vendor/bin/phpspec run{% if ansi %} --ansi{% endif %} $@
+fi

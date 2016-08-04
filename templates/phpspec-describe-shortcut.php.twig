@@ -1,0 +1,13 @@
+#!/usr/bin/env php
+<?php
+$executable = file_exists(getcwd() . '/bin/phpspec') ? getcwd() . '/bin/phpspec' : getcwd() . '/vendor/bin/phpspec';
+$prefix = null;
+if (file_exists(getcwd() . '/composer.json')) {
+    $composer = json_decode(file_get_contents(getcwd() . '/composer.json'), true);
+    if (isset($composer['autoload']['psr-4']) && count($composer['autoload']['psr-4']) === 1) {
+        $prefix = str_replace('\\', '/', array_keys($composer['autoload']['psr-4'])[0]);
+    }
+}
+array_shift($argv);
+passthru($executable . " describe {% if ansi %}--ansi {% endif %}" . $prefix . implode(" ", $argv), $returnValue);
+return $returnValue;

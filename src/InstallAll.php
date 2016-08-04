@@ -18,7 +18,13 @@ class InstallAll extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
-        $commands = ['symfony:console:shortcuts', 'composer:completion:bash', 'git:ignore:global', 'git:scm:breeze'];
+        $commands = [
+            'symfony:console:shortcuts',
+            'composer:completion:bash',
+            'git:ignore:global',
+            'git:scm:breeze',
+            'phpspec:shortcuts'
+        ];
         $application = $this->getApplication();
         $io->progressStart(count($commands));
 
