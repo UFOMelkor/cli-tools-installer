@@ -52,7 +52,6 @@ HELP
             return 0;
         }
 
-        $globalInstallation = $this->config->isGlobalInstallation($io);
         $binPath = $this->config->getBinDirectory($io);
         $forceAnsi = $this->config->isForcingAnsi($io);
 
@@ -87,9 +86,7 @@ HELP
                 $io->error("Could not write to $target.");
                 return 1;
             }
-            if ($globalInstallation) {
-                chmod($target, 0755);
-            }
+            chmod($target, 0755);
             $io->success("Installed the Symfony Console Shortcut for the $env environment to $target.");
         }
         return 0;
