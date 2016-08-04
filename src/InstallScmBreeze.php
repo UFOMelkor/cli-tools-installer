@@ -22,14 +22,16 @@ class InstallScmBreeze extends Command
     public function __construct(Config $config, ExecutableFinder $executables)
     {
         parent::__construct('git:scm:breeze');
-        $this->setDescription('Streamline your SCM workflow');
+        $this->setDescription(
+            'Streamline your SCM workflow using <options=underscore>https://github.com/ndbroadbent/scm_breeze</>'
+        );
         $this->setHelp(<<<HELP
 SCM Breeze is a set of shell scripts (for bash and zsh) that enhance your
 interaction with git. It integrates with your shell to give you numbered file
 shortcuts, a repository index with tab completion, and many other useful
 features.
 
-For further details see https://github.com/ndbroadbent/scm_breeze
+For further details see <options=underscore>https://github.com/ndbroadbent/scm_breeze</>
 HELP
         );
         $this->config = $config;

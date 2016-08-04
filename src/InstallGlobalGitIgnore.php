@@ -29,8 +29,8 @@ Adding the same files over and over again to your .gitignore can be very
 annoying. Therefore Git allows to ignore files globally within a global
 .gitignore file.
 
-This installation creates a global .gitignore file for you and configures git
-to use it.
+This installation let you assemble a global .gitignore file using the templates
+from <options=underscore>https://github.com/github/gitignore</> and configures git to use it.
 HELP
         );
         $this->config = $config;
@@ -103,20 +103,20 @@ HELP
     {
 
         $targetDirectory = sys_get_temp_dir() . '/' . uniqid('php_cli_tools_', true);
+        $repository = 'https://github.com/github/gitignore.git';
         try {
             $io->text(
-                "Cloning <fg;options=bold>https://github.com/github/gitignore.git</> to "
-                . "<fg;options=bold>$targetDirectory</> ..."
+                "Cloning <options=underscore>$repository</> to <options=bold>$targetDirectory</> ..."
             );
-            $git->cloneRepository('https://github.com/github/gitignore.git', $targetDirectory);
+            $git->cloneRepository($repository, $targetDirectory);
         } catch (GitException $exception) {
             $io->error(
-                "An error occurred while cloning https://github.com/github/gitignore.git to $targetDirectory: "
+                "An error occurred while cloning <options=underscore>$repository</> to $targetDirectory: "
                 . $exception->getMessage()
             );
             return null;
         }
-        $io->text("Cloned the .gitignore templates from https://github.com/github/gitignore.git to $targetDirectory");
+        $io->text("Cloned the .gitignore templates from <options=underscore>$repository</> to $targetDirectory");
 
         $choices = array_map(function (string $choice) use ($targetDirectory) {
             return substr($choice, strlen($targetDirectory . '/Global/'), -10);
@@ -145,13 +145,13 @@ HELP
             );
         } catch (GitException $exception) {
             $io->error(
-                "An error occurred while checking for an existing global gitignore: "
+                'An error occurred while checking for an existing global gitignore: '
                 . $exception->getMessage()
             );
             return 1;
         }
         if (file_exists($pathToExistingGitignore)
-            && ! $io->confirm("There is already a global gitignore. Do you want to override it?", false)
+            && ! $io->confirm('There is already a global gitignore. Do you want to override it?', false)
         ) {
             return 0;
         }

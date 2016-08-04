@@ -24,10 +24,13 @@ class InstallComposerBashCompletion extends Command
     public function __construct(Config $config, ExecutableFinder $executables)
     {
         parent::__construct('composer:completion:bash');
-        $this->setDescription('Bash completion for Composer using https://github.com/iArren/composer-bash-completion');
+        $this->setDescription(
+            'Bash completion for Composer using '
+            . '<options=underscore>https://github.com/iArren/composer-bash-completion</>'
+        );
         $this->setHelp(<<<'HELP'
 Using composer from the command line is cool but looking into
-https://packagist.org/ every time you forgot how a package is spelled is not.
+<options=underscore>https://packagist.org/</> every time you forgot how a package is spelled is not.
 
 iArren developed a bash completion that will complete both package name and
 version.

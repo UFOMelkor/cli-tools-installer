@@ -23,17 +23,17 @@ class InstallSymfonyConsoleShortcuts extends Command
         $this->setDescription('Shortcuts for accessing the Symfony Console');
         $this->setHelp(
             <<<HELP
-Typing bin/console --env=dev cache:clear is long and not really practicable.
+Typing <options=underscore>bin/console --env=dev cache:clear</> is long and not really practicable.
 Symfony allows to use abbreviations for the commands like
-bin/console --env=dev c:c, but this is also long.
+<options=underscore>bin/console --env=dev c:c</>, but this is also long.
 You are going to install shortcuts for the dev and prod environments that will
 make you able to use
 
-\tdev c:c\t\t instead of\tbin/console --env=dev c:c
+\t<options=underscore>dev c:c</> instead of <options=underscore>bin/console --env=dev c:c</>
 and
-\tprod c:c\t instead of\tbin/console --env=prod --no-debug c:c
+\t<options=underscore>prod c:c</> instead of <options=underscore>bin/console --env=prod --no-debug c:c</>
 
-They will work for both the bin/console of Symfony3 and the app/console of
+They will work for both the <options=underscore>bin/console</> of Symfony3 and the <options=underscore>app/console</> of
 Symfony2.
 HELP
         );
