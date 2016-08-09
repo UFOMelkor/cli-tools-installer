@@ -144,11 +144,7 @@ HELP
                 $git->run(GitCommand::getInstance('config', '--global', 'core.excludesfile'))
             );
         } catch (GitException $exception) {
-            $io->error(
-                'An error occurred while checking for an existing global gitignore: '
-                . $exception->getMessage()
-            );
-            return 1;
+            return null;
         }
         if (file_exists($pathToExistingGitignore)
             && ! $io->confirm('There is already a global gitignore. Do you want to override it?', false)
