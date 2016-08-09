@@ -11,6 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use UFOMelkor\CliTools\Config\Config;
+use UFOMelkor\CliTools\Git\Git;
 
 class InstallGlobalGitIgnore extends Command
 {
@@ -68,7 +69,7 @@ HELP
 
         $globalGitignorePath = $this->config->getHomeDirectory($io) . '/.gitignore_global';
 
-        $git = new GitWrapper($gitBinary);
+        $git = new Git($gitBinary);
         if (is_int($exitCode = $this->globalGitIgnoreExistsAndShouldNotBeOverridden($git, $io))) {
             return $exitCode;
         }
@@ -84,7 +85,7 @@ HELP
         }
 
         try {
-            $git->run(GitCommand::getInstance('config', '--global', 'core.excludesfile', $globalGitignorePath));
+            $git->setGlobalConfig('core.excludesfile', $globalGitignorePath);
         } catch (GitException $exception) {
             $io->error(
                 "An error occurred while configuring the global gitignore file to $globalGitignorePath: "
@@ -92,35 +93,33 @@ HELP
             );
             return 1;
         }
+
         $io->text("Configured git to use $globalGitignorePath as global .gitignore");
-
         $io->success("Installed the global gitignore to $globalGitignorePath.");
-
         return 0;
     }
 
-    private function createGitIgnore(GitWrapper $git, SymfonyStyle $io)
+    private function createGitIgnore(Git $git, SymfonyStyle $io)
     {
-
-        $targetDirectory = sys_get_temp_dir() . '/' . uniqid('php_cli_tools_', true);
-        $repository = 'https://github.com/github/gitignore.git';
+        $repositoryUrl = 'https://github.com/github/gitignore.git';
         try {
             $io->text(
-                "Cloning <options=underscore>$repository</> to <options=bold>$targetDirectory</> ..."
+                "Cloning <options=underscore>$repositoryUrl</> ..."
             );
-            $git->cloneRepository($repository, $targetDirectory);
+            $repository = $git->cloneTemporary($repositoryUrl);
         } catch (GitException $exception) {
             $io->error(
-                "An error occurred while cloning <options=underscore>$repository</> to $targetDirectory: "
+                "An error occurred while cloning <options=underscore>$repositoryUrl</>: "
                 . $exception->getMessage()
             );
             return null;
         }
-        $io->text("Cloned the .gitignore templates from <options=underscore>$repository</> to $targetDirectory");
+        $io->text(
+            "Cloned the .gitignore templates from <options=underscore>$repositoryUrl</> to "
+            . $repository->localPath()
+        );
 
-        $choices = array_map(function (string $choice) use ($targetDirectory) {
-            return substr($choice, strlen($targetDirectory . '/Global/'), -10);
-        } , glob($targetDirectory . '/Global/*.gitignore'));
+        $choices = $repository->fileNamesWithoutPathAndExtension('/Global/*.gitignore');
 
         $question = new ChoiceQuestion(
             'Please choose templates to create the .gitignore (divide multiple by comma)',
@@ -128,26 +127,23 @@ HELP
         );
         $question->setMultiselect(true);
         $selection = $io->askQuestion($question);
-        $gitignoreContent = implode("\n\n", array_map(function (string $choice) use ($targetDirectory) {
+        $gitignoreContent = implode("\n\n", array_map(function (string $choice) use ($repository) {
             return str_pad('', strlen($choice) + 4, '#') . "\n"
             . "# $choice #\n"
             . str_pad('', strlen($choice) + 4, '#') . "\n"
-            . file_get_contents("$targetDirectory/Global/$choice.gitignore");
+            . file_get_contents($repository->localPath() . "/Global/$choice.gitignore");
         }, $selection));
+        $repository->remove();
         return $gitignoreContent;
     }
 
-    private function globalGitIgnoreExistsAndShouldNotBeOverridden(GitWrapper $git, SymfonyStyle $io)
+    private function globalGitIgnoreExistsAndShouldNotBeOverridden(Git $git, SymfonyStyle $io)
     {
-        try {
-            $pathToExistingGitignore = trim(
-                $git->run(GitCommand::getInstance('config', '--global', 'core.excludesfile'))
-            );
-        } catch (GitException $exception) {
-            return null;
-        }
-        if (file_exists($pathToExistingGitignore)
-            && ! $io->confirm('There is already a global gitignore. Do you want to override it?', false)
+        $pathToExistingGitignore = $git->getGlobalConfig('core.excludesfile');
+        if ($pathToExistingGitignore === null
+            || (file_exists($pathToExistingGitignore)
+                && ! $io->confirm('There is already a global gitignore. Do you want to override it?', false)
+            )
         ) {
             return 0;
         }

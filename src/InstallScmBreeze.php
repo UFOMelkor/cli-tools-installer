@@ -10,6 +10,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\StyleInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use UFOMelkor\CliTools\Config\Config;
+use UFOMelkor\CliTools\Git\Git;
 
 class InstallScmBreeze extends Command
 {
@@ -63,9 +64,10 @@ HELP
         }
 
         $homeDirectory = $this->config->getHomeDirectory($io);
-        $git = new GitWrapper($gitBinary);
+        $git = new Git($gitBinary);
+        $targetDirectory = "$homeDirectory/.scm_breeze";
 
-        if (is_dir("$homeDirectory/.scm_breeze")) {
+        if (is_dir($targetDirectory)) {
             $io->note('SCM Breeze is already installed and updating is currently not supported.');
             if (! $this->setUpRepositoryIndex($io, $homeDirectory)) {
                 return 1;
@@ -73,19 +75,21 @@ HELP
             return 0;
         }
 
-        $io->text('Fetching latest version of SCM Breeze from https://github.com/ndbroadbent/scm_breeze.git ...');
+        $io->text('Fetching latest version of SCM Breeze from '
+            . '<options=underline>https://github.com/ndbroadbent/scm_breeze.git</> ...'
+        );
         try {
-            $git->cloneRepository('https://github.com/ndbroadbent/scm_breeze.git', "$homeDirectory/.scm_breeze");
+            $git->clonePermanently('https://github.com/ndbroadbent/scm_breeze.git', $targetDirectory);
         } catch (GitException $exception) {
             $io->error(
                 'An exeception occurred while cloning https://github.com/ndbroadbent/scm_breeze.git '
-                . "to $homeDirectory/.scm_breeze: " . $exception->getMessage()
+                . "to $targetDirectory: " . $exception->getMessage()
             );
             return 1;
         }
-        exec("$homeDirectory/.scm_breeze/install.sh", $output, $returnVar);
+        exec("$targetDirectory/install.sh", $output, $returnVar);
         if ($returnVar !== 0) {
-            $io->error("Could not run the install script $homeDirectory/.scm_breeze/install.sh");
+            $io->error("Could not run the install script $$targetDirectory/install.sh");
             return 1;
         }
 
@@ -93,7 +97,7 @@ HELP
             return 1;
         }
 
-        $io->success("Installed SCM Breeze to $homeDirectory/.scm_breeze");
+        $io->success("Installed SCM Breeze to $$targetDirectory");
         $io->note("Remember to start a new console to activate or run:\tsource $homeDirectory/.bashrc");
         return 0;
     }
