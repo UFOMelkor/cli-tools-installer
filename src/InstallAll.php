@@ -22,6 +22,7 @@ class InstallAll extends Command
             'symfony:console:shortcuts',
             'composer:completion:bash',
             'git:ignore:global',
+            'git:commit-template:global',
             'git:scm:breeze',
             'phpspec:shortcuts'
         ];
