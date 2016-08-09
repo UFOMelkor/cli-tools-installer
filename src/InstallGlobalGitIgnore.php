@@ -2,9 +2,7 @@
 declare(strict_types = 1);
 namespace UFOMelkor\CliTools;
 
-use GitWrapper\GitCommand;
 use GitWrapper\GitException;
-use GitWrapper\GitWrapper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -49,11 +47,6 @@ HELP
             $io->error(
                 'The global .gitignore could not be installed for all users. Please try again with user permissions.'
             );
-            return 1;
-        }
-
-        if (! $this->executables->find('composer')) {
-            $io->error('You must have a executable named composer in your PATH.');
             return 1;
         }
 

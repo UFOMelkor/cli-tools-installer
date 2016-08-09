@@ -24,11 +24,10 @@ class GitRepository
     {
         return array_map(function (string $path) {
             $fileName = basename($path);
-            var_dump($fileName);
             return strpos($fileName, '.') === false
                 ? $fileName
                 : substr($fileName, 0, -1 * strlen(strrchr($fileName, '.')));
-        } , glob($this->directory . '/' . ltrim($glob, '/')));
+        }, glob($this->directory . '/' . ltrim($glob, '/')));
     }
 
     public function remove()
@@ -40,8 +39,9 @@ class GitRepository
             new RecursiveDirectoryIterator($this->directory, RecursiveDirectoryIterator::SKIP_DOTS),
             RecursiveIteratorIterator::CHILD_FIRST
         );
-        foreach($files as $file) { /* @var $file \SplFileInfo */
-            if ($file->isDir()){
+        foreach ($files as $file) {
+            /* @var $file \SplFileInfo */
+            if ($file->isDir()) {
                 rmdir($file->getPathname());
                 continue;
             }

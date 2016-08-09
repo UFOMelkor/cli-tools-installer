@@ -3,7 +3,6 @@ declare(strict_types = 1);
 namespace UFOMelkor\CliTools;
 
 use GitWrapper\GitException;
-use GitWrapper\GitWrapper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -75,7 +74,8 @@ HELP
             return 0;
         }
 
-        $io->text('Fetching latest version of SCM Breeze from '
+        $io->text(
+            'Fetching latest version of SCM Breeze from '
             . '<options=underline>https://github.com/ndbroadbent/scm_breeze.git</> ...'
         );
         try {
