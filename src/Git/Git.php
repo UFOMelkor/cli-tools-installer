@@ -4,6 +4,7 @@ namespace UFOMelkor\CliTools\Git;
 
 use GitWrapper\GitCommand;
 use GitWrapper\GitException;
+use GitWrapper\GitWorkingCopy;
 use GitWrapper\GitWrapper;
 
 class Git
@@ -23,8 +24,21 @@ class Git
 
     public function clonePermanently(string $url, string $targetDirectory): GitRepository
     {
-        $this->git->cloneRepository($url, $targetDirectory);
-        return new GitRepository($targetDirectory);
+        $workingCopy = $this->git->cloneRepository($url, $targetDirectory);
+        return new GitRepository($targetDirectory, $workingCopy);
+    }
+
+    public function isCloned(string $directory): bool
+    {
+        return (new GitWorkingCopy($this->git, $directory))->isCloned();
+    }
+
+    public function open(string $directory): GitRepository
+    {
+        if (! $this->isCloned($directory)) {
+            throw new GitException("$directory is no cloned git repository");
+        }
+        return new GitRepository($directory, new GitWorkingCopy($this->git, $directory));
     }
 
     /**

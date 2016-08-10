@@ -81,4 +81,22 @@ class StoredConfig implements Config
         }
         return rtrim($this->config['global']['bash_completion_path'], '/');
     }
+
+    public function getBashConfigurationPath(StyleInterface $io): string
+    {
+        if (! isset($this->config['global']['bash_configuration_path'])) {
+            $this->config['global']['bash_configuration_path'] = $this->decorated->getBashConfigurationPath($io);
+            $this->store();
+        }
+        return rtrim($this->config['global']['bash_configuration_path'], '/');
+    }
+
+    public function getFontDirectory(StyleInterface $io): string
+    {
+        if (! isset($this->config['global']['font_directory'])) {
+            $this->config['global']['font_directory'] = $this->decorated->getFontDirectory($io);
+            $this->store();
+        }
+        return rtrim($this->config['global']['font_directory'], '/');
+    }
 }

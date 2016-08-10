@@ -82,7 +82,7 @@ HELP
             $git->clonePermanently('https://github.com/ndbroadbent/scm_breeze.git', $targetDirectory);
         } catch (GitException $exception) {
             $io->error(
-                'An exeception occurred while cloning https://github.com/ndbroadbent/scm_breeze.git '
+                'An exception occurred while cloning https://github.com/ndbroadbent/scm_breeze.git '
                 . "to $targetDirectory: " . $exception->getMessage()
             );
             return 1;

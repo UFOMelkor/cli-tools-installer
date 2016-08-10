@@ -33,6 +33,7 @@ class Application extends SymfonyApplication
         $defaultCommands[] = new InstallSymfonyConsoleShortcuts($config, $twig);
         $defaultCommands[] = new InstallGlobalGitIgnore($config, $executables);
         $defaultCommands[] = new InstallGlobalGitCommitTemplate($config, $executables);
+        $defaultCommands[] = new InstallOhMyGit($config, $executables);
         $defaultCommands[] = new InstallScmBreeze($config, $executables);
         $defaultCommands[] = new InstallPhpSpecConsoleShortcuts($config, $twig);
         return $defaultCommands;

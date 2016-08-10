@@ -15,4 +15,8 @@ interface Config
     public function getBashCompletionPath(StyleInterface $io): string;
 
     public function getHomeDirectory(StyleInterface $io): string;
+
+    public function getBashConfigurationPath(StyleInterface $io): string;
+
+    public function getFontDirectory(StyleInterface $io): string;
 }
