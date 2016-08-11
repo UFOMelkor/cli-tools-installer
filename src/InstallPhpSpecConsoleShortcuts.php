@@ -36,7 +36,7 @@ class that you describe. Assuming that you configured <options=bold>Acme\\Foo\\ 
 composer.json, you can execute <options=underscore>describe Bar/Baz</> instead of
 <options=underscore>vendor/bin/phpspec describe Acme/Foo/Bar/Baz</>.
 
-The other script does less magic. Its called <options=underscore>phpspec</> and is a shortcut for
+The other script does less magic. Its called <options=underscore>pspec</> and is a shortcut for
 <options=underscore>vendor/bin/phpspec run</>.  
 HELP
         );
@@ -59,7 +59,7 @@ HELP
 
         $shortcuts = [
             'describe' => 'phpspec-describe-shortcut.php.twig',
-            'phpspec' => 'phpspec-run-shortcut.sh.twig',
+            'pspec' => 'phpspec-run-shortcut.sh.twig',
         ];
         foreach ($shortcuts as $name => $template) {
             $io->section("<options=underscore>$name</> shortcut");
@@ -86,5 +86,6 @@ HELP
                 $io->success("Installed the $name shortcut for phpspec to $target.");
             }
         }
+        return 0;
     }
 }
