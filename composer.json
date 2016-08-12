@@ -1,4 +1,16 @@
 {
+    "name": "ufomelkor/cli-tools-installer",
+    "type": "project",
+    "description": "Installer for various CLI Tools that are useful when developing PHP",
+    "keywords": ["CLI", "Tools", "Installer", "Command Line"],
+    "homepage": "https://ufomelkor.github.io/cli-tools-installer",
+    "authors": [
+        {
+            "name": "Oskar Pfeifer-Bley",
+            "email": "oskar@programming-php.net"
+        }
+    ],
+    "license": "MIT",
     "autoload": {
         "psr-4": {
             "UFOMelkor\\CliTools\\": "src"

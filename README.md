@@ -20,7 +20,7 @@ Most of the tools are specific to PHP but some will also help you dealing with
 Git in the command line or something like this.
 
 You can install them by running
-**`composer global require ufomelkor/php-cli-tools`** and then `cli-install`
+**`composer global require ufomelkor/cli-tools-installer`** and then `cli-install`
 to have a look at the available tools (assuming that you have the global
 bin-dir of composer in your path). If you want to install all tools simple run
 **`cli-install all`**.
