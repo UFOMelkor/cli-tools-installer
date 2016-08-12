@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>PHP CLI Tools Installer</title>
+
+        <link rel="stylesheet" href="http://ufomelkor.github.io/cli-tools-installer/css/bootstrap.min.css">
+        <link rel="stylesheet" href="http://ufomelkor.github.io/cli-tools-installer/css/font-awesome.min.css">
+        <link rel="stylesheet" href="http://ufomelkor.github.io/cli-tools-installer/css/highlight.dark.css">
+        <link rel="stylesheet" href="http://ufomelkor.github.io/cli-tools-installer/css/main.css">
+    </head>
+    <body>
+
+        <header class="navbar navbar-default navbar-fixed-top">
+
+            <a class="navbar-brand" href="http://ufomelkor.github.io/cli-tools-installer/">
+                PHP CLI Tools Installer
+                <small class="hidden-xs hidden-sm">
+                    Installs various CLI tools that are useful when developing PHP
+                </small>
+            </a>
+
+                            <a href="https://github.com/UFOMelkor/cli-tools-installer">
+                    <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
+                </a>
+            
+        </header>
+
+        <main class="container-fluid">
+            <div class="row">
+
+                
+                    <nav id="sidebar" class="col-sm-3 col-lg-2" role="navigation">
+
+                        <ul class="nav nav-pills nav-stacked">
+                                                            <li class="">
+                                    <a href="http://ufomelkor.github.io/cli-tools-installer/index.html">
+                                        <i class="fa fa-fw fa-home"></i> Home
+                                    </a>
+                                </li>
+                                                            <li class="active">
+                                    <a href="http://ufomelkor.github.io/cli-tools-installer/doc/shortcuts.html">
+                                        <i class="fa fa-fw fa-fast-forward"></i> Shortcuts
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://ufomelkor.github.io/cli-tools-installer/doc/git.html">
+                                        <i class="fa fa-fw fa-git"></i> Git
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://ufomelkor.github.io/cli-tools-installer/doc/completion.html">
+                                        <i class="fa fa-fw fa-terminal"></i> Bash completion
+                                    </a>
+                                </li>
+                                                    </ul>
+
+                    </nav>
+
+                
+                <section id="content" class="col-sm-offset-3 col-lg-offset-2 col-sm-9 col-lg-10">
+                    <h1 id="shortcuts">Shortcuts</h1>
+<h2 id="symfony-console">Symfony Console</h2>
+<p>Installed via <code>cli-install shortcuts:symfony-console</code> or <code>cli-install s:s</code></p>
+<p>Typing <code>bin/console --env=dev cache:clear</code> is long and not really practicable.
+Symfony allows to use abbreviations for the commands like
+<code>bin/console --env=dev c:c</code>, but this is also long.</p>
+<p>The PHP CLI Tools install shortcuts for the <strong><code>dev</code></strong> and <strong><code>prod</code></strong> environments that will
+make you able to use <code>dev c:c instead</code> of <code>bin/console --env=dev c:c</code> and
+<code>prod c:c</code> instead of <code>bin/console --env=prod --no-debug c:c</code>.</p>
+<p>They will work for both the <code>bin/console</code> of Symfony3 and the <code>app/console</code> of
+Symfony2.</p>
+<h2 id="phpspec">PHPSpec</h2>
+<p>Installed via <code>cli-install shortcuts:phpspec</code> or <code>cli-install s:p</code></p>
+<p>phpspec is a great tool but it is intensively using the command line. This
+might scare of developers that are not using the command line normally.
+Therefore two scripts are provided that will help using phpspec from command
+line.</p>
+<p>phpspec provides two commands and so there are two scripts. The first is called
+<strong><code>describe</code></strong>. It is a shortcut for <code>vendor/bin/phpspec describe</code>.
+But it will do more. If you have a <code>composer.json</code> and you have only one PSR-4
+mapping configured in your autoload section, then you can omit the part of the
+class that you describe. Assuming that you configured <code>Acme\Foo\</code> in your
+<code>composer.json</code>, you can execute <code>describe Bar/Baz</code> instead of
+<code>vendor/bin/phpspec describe Acme/Foo/Bar/Baz</code>.</p>
+<p>The other script does less magic. Its called <strong><code>pspec</code></strong> and is a shortcut for
+<code>vendor/bin/phpspec</code> run.  </p>
+                </section>
+
+            </div>
+        </main>
+
+        <footer>
+            <div class="container-fluid">
+                <p class="text-muted">
+                    website generated with <a href="http://couscous.io" title="Markdown website generator">Couscous</a>
+                </p>
+            </div>
+        </footer>
+
+        <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        <script src="//yastatic.net/highlightjs/8.2/highlight.min.js"></script>
+
+        <script>
+            $(function() {
+                $("section>h1").wrap('<div class="page-header" />');
+                // Syntax highlighting
+                hljs.initHighlightingOnLoad();
+            });
+        </script>
+
+    </body>
+</html>

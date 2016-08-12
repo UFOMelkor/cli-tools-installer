@@ -1,7 +1,0 @@
-#!/bin/bash
-if [ -f `pwd`/app/console ]
-then
-    php `pwd`/app/console --env={{ env }}{% if ansi %} --ansi{% endif %}{% if not debug %} --no-debug{% endif %} $@
-else
-    php `pwd`/bin/console --env={{ env }}{% if ansi %} --ansi{% endif %}{% if not debug %} --no-debug{% endif %} $@
-fi
