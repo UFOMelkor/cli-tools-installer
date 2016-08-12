@@ -1,7 +1,7 @@
 template:
     url: https://github.com/CouscousPHP/Template-Light
 
-baseUrl: http://ufomelkor.github.io/cli-tools-installer
+baseUrl: https://ufomelkor.github.io/cli-tools-installer
 
 github:
     user: UFOMelkor
