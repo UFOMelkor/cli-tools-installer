@@ -19,14 +19,14 @@ class InstallAll extends Command
     {
         $io = new SymfonyStyle($input, $output);
         $commands = [
-            'composer:completion:bash',
-            'symfony:console:shortcuts',
-            'symfony:completion:bash',
+            'shortcuts:symfony-console',
+            'shortcuts:phpspec',
+            'bash:completion:composer',
+            'bash:completion:symfony-console',
             'git:ignore:global',
             'git:commit-template:global',
-            'git:scm:breeze',
+            'git:scm-breeze',
             'git:oh-my',
-            'phpspec:shortcuts'
         ];
         $application = $this->getApplication();
         $io->progressStart(count($commands));

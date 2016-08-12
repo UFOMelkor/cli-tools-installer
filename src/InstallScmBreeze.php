@@ -21,7 +21,7 @@ class InstallScmBreeze extends Command
 
     public function __construct(Config $config, ExecutableFinder $executables)
     {
-        parent::__construct('git:scm:breeze');
+        parent::__construct('git:scm-breeze');
         $this->setDescription(
             'Streamline your SCM workflow using <options=underscore>https://github.com/ndbroadbent/scm_breeze</>'
         );

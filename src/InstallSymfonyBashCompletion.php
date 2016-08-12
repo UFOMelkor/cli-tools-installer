@@ -19,7 +19,7 @@ class InstallSymfonyBashCompletion extends Command
 
     public function __construct(Config $config, ExecutableFinder $executables)
     {
-        parent::__construct('symfony:completion:bash');
+        parent::__construct('bash:completion:symfony-console');
         $this->setDescription(
             'Bash completion for tools based on Symfony Console using '
             . '<options=underscore>https://github.com/bamarni/symfony-console-autocomplete</>'
@@ -120,7 +120,7 @@ HELP
     {
         $tools = array_map('trim', explode(',', $io->ask(
             'Which tools based on Symfony Console should be completed? Do not forget possible aliases!',
-            'console, php-cs-fixer, phpspec, behat, phpmetrics, dev, prod'
+            'console, php-cs-fixer, phpspec, behat, phpmetrics, couscous, dev, prod'
         )));
 
         $aliases = implode(' ', array_map(function (string $tool) {

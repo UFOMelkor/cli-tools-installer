@@ -23,7 +23,7 @@ class InstallComposerBashCompletion extends Command
 
     public function __construct(Config $config, ExecutableFinder $executables)
     {
-        parent::__construct('composer:completion:bash');
+        parent::__construct('bash:completion:composer');
         $this->setDescription(
             'Bash completion for Composer using '
             . '<options=underscore>https://github.com/iArren/composer-bash-completion</>'

@@ -19,7 +19,7 @@ class InstallSymfonyConsoleShortcuts extends Command
 
     public function __construct(Config $config, Twig_Environment $twig)
     {
-        parent::__construct('symfony:console:shortcuts');
+        parent::__construct('shortcuts:symfony-console');
         $this->setDescription('Shortcuts for accessing the Symfony Console');
         $this->setHelp(
             <<<HELP

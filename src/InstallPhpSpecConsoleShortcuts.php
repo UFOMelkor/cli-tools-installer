@@ -19,7 +19,7 @@ class InstallPhpSpecConsoleShortcuts extends Command
 
     public function __construct(Config $config, Twig_Environment $twig)
     {
-        parent::__construct('phpspec:shortcuts');
+        parent::__construct('shortcuts:phpspec');
         $this->setDescription('Shortcuts for phpspec');
         $this->setHelp(
             <<<HELP
