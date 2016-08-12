@@ -30,6 +30,7 @@ class Application extends SymfonyApplication
         $defaultCommands = parent::getDefaultCommands();
         $defaultCommands[] = new InstallAll();
         $defaultCommands[] = new InstallComposerBashCompletion($config, $executables);
+        $defaultCommands[] = new InstallSymfonyBashCompletion($config, $executables);
         $defaultCommands[] = new InstallSymfonyConsoleShortcuts($config, $twig);
         $defaultCommands[] = new InstallGlobalGitIgnore($config, $executables);
         $defaultCommands[] = new InstallGlobalGitCommitTemplate($config, $executables);

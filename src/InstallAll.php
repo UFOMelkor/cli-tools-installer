@@ -19,8 +19,9 @@ class InstallAll extends Command
     {
         $io = new SymfonyStyle($input, $output);
         $commands = [
-            'symfony:console:shortcuts',
             'composer:completion:bash',
+            'symfony:console:shortcuts',
+            'symfony:completion:bash',
             'git:ignore:global',
             'git:commit-template:global',
             'git:scm:breeze',
