@@ -1,0 +1,11 @@
+language: php
+env:
+    global:
+        - GIT_NAME: "'Couscous auto deploy'"
+        - GIT_EMAIL: couscous@couscous.io
+        - GH_REF: github.com/UFOMelkor/cli-tools-installer
+        - secure: SIR1ihb0cUrl3Hcic8mU3+5hjGMZQkMXlzfXr/3NhtL0G3GWVyMAkgwvMyyyXY6E1O+/8eL0yIjMWHVupouW/eu+Qbabn4knfxtKtHlejJ6ZYBb4ojTzP+FWrHxpHgP1yiZE5pwUjPAfYurYlNO/Nmd81meUdwBnGIU5tLuQT61Tt7+ZJSvU8RhR0W6isUUjibhzOmLwwVbX5nN/xJA6bRkjvWe1knI5wQSwcTU5mvHXE0xy9wGh3InpqKa/5hXfOe96HHEJcf7NQHAkdpB7RYNvcc5IfyAHRq67bDarB+JkdGJ8Hc5eGA08XSeSpk5+H8mRvS4eZsjeSEY3PdaAJqza7oovPqm9atfdyhH1IRCkN7LgvFNpTSMB8WDE8F/pauNnTQKPeiN8YaeWqX2VQTGCFGGMZJ90KzJupdHk+zFbABsVU23q+TxgKrFrjXBR8NqTqv1vnuPMuRVVObrpvBiFeXfhms3clIVwUzZZNQ4j5tM5/pLdfpu+5AqxCKagcta0rcKfj4fJkk5fziZDvdBNH465bknmxAgZe+tlgBXsudQolhhHbKpdK+sZD3G+yXi7QiGNFwLX35j+2tgDInqK4WQX721zyh/sbtTlreTBzbrs6NYboBJFoExTfn3Rmhkz5thby1leGiQDAbGcm/D78o9/UrstbdChp4CnheA=
+before_script:
+    - composer install --no-progress
+script:
+    - vendor/bin/couscous travis-auto-deploy --php-version $TRAVIS_PHP_VERSION

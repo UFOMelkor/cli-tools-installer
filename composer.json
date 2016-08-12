@@ -10,5 +10,8 @@
         "piwik/ini": "^1.0",
         "twig/twig": "^1.24",
         "cpliakas/git-wrapper": "^1.7"
+    },
+    "require-dev": {
+        "couscous/couscous": "^1.5"
     }
 }
