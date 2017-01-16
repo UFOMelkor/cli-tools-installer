@@ -16,6 +16,7 @@
             "UFOMelkor\\CliTools\\": "src"
         }
     },
+    "bin": ["bin/cli-install"],
     "require": {
         "symfony/console": "^3.1",
         "guzzlehttp/guzzle": "^6.2",
