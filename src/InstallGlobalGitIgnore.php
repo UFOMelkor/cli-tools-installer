@@ -133,8 +133,8 @@ HELP
     private function globalGitIgnoreExistsAndShouldNotBeOverridden(Git $git, SymfonyStyle $io)
     {
         $pathToExistingGitignore = $git->getGlobalConfig('core.excludesfile');
-        if ($pathToExistingGitignore === null
-            || (file_exists($pathToExistingGitignore)
+        if ($pathToExistingGitignore !== null
+            && (file_exists($pathToExistingGitignore)
                 && ! $io->confirm('There is already a global gitignore. Do you want to override it?', false)
             )
         ) {
