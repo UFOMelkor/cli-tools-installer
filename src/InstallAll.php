@@ -27,6 +27,7 @@ class InstallAll extends Command
             'git:commit-template:global',
             'git:scm-breeze',
             'git:oh-my',
+            'git:hub:hub',
         ];
         $application = $this->getApplication();
         $io->progressStart(count($commands));

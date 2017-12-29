@@ -1,13 +1,14 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
+
 namespace UFOMelkor\CliTools;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\StyleInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use UFOMelkor\CliTools\Config\Config;
+use UFOMelkor\CliTools\Installers\BashCompletionInstaller;
 
 class InstallSymfonyBashCompletion extends Command
 {
@@ -17,8 +18,14 @@ class InstallSymfonyBashCompletion extends Command
     /** @var ExecutableFinder */
     private $executables;
 
-    public function __construct(Config $config, ExecutableFinder $executables)
-    {
+    /** @var BashCompletionInstaller */
+    private $completions;
+
+    public function __construct(
+        Config $config,
+        ExecutableFinder $executables,
+        BashCompletionInstaller $completionInstaller
+    ) {
         parent::__construct('bash:completion:symfony-console');
         $this->setDescription(
             'Bash completion for tools based on Symfony Console using '
@@ -42,6 +49,7 @@ HELP
         );
         $this->config = $config;
         $this->executables = $executables;
+        $this->completions = $completionInstaller;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -50,7 +58,6 @@ HELP
         $io->title('Symfony Console autocomplete');
         $io->text(explode("\n", $this->getHelp()));
         $io->newLine(1);
-
 
         if ($this->config->isGlobalInstallation($io)) {
             $io->error(
@@ -91,33 +98,6 @@ HELP
             return 1;
         }
 
-
-        $target = $this->config->getBashCompletionPath($io);
-        $fileName = 'composer';
-        if (! is_dir($target)) {
-            $completionLoadingFilePath = $target;
-            $target = dirname($target);
-            $fileName = '.php_cli_tools_symfony_bash_completion';
-        }
-        $target = "$target/$fileName";
-
-        if (! $this->createOrUpdateCompletionFile($io, $target, "$composerBinDir/symfony-autocomplete")) {
-            return 1;
-        }
-
-        if (isset($completionLoadingFilePath)
-            && ! $this->createCompletionLoadingFile($io, $completionLoadingFilePath, $target)
-        ) {
-            return 1;
-        }
-
-        $io->success('Installed the latest version of symfony console bash completion.');
-        $io->note('Remember to start a new console to activate this changes.');
-        return 0;
-    }
-
-    private function createOrUpdateCompletionFile(StyleInterface $io, string $filePath, string $pathToBinary): bool
-    {
         $tools = array_map('trim', explode(',', $io->ask(
             'Which tools based on Symfony Console should be completed? Do not forget possible aliases!',
             'console, php-cs-fixer, phpspec, behat, phpmetrics, couscous, dev, prod'
@@ -126,45 +106,13 @@ HELP
         $aliases = implode(' ', array_map(function (string $tool) {
             return "--aliases=$tool";
         }, $tools));
+        $script = "$composerBinDir/symfony-autocomplete --disable-default-tools $aliases";
 
-
-        $script = "eval \"\$($pathToBinary --disable-default-tools $aliases)\"";
-
-        if (file_exists($filePath)) {
-            $currentContent = file_get_contents($filePath);
-            if ($currentContent !== $script) {
-                if (! @file_put_contents($filePath, $script)) {
-                    $io->error("Could not write to $filePath.");
-                    return false;
-                }
-                $io->text("Updated the bash completion in $filePath.");
-            } else {
-                $io->text("The latest version is already installed in $filePath.");
-            }
-        } else {
-            if (! @file_put_contents($filePath, $script)) {
-                $io->error("Could not write to $filePath.");
-                return false;
-            }
-            $io->text("Installed the bash completion in $filePath.");
+        if (! $this->completions->installBashCompletionFromEval($io, 'symfony_bash_completion', $script)) {
+            return 1;
         }
-        return true;
-    }
-
-    private function createCompletionLoadingFile(
-        StyleInterface $io,
-        string $completionLoadingFilePath,
-        string $completionFilePath
-    ): bool {
-        $currentLoading = file_exists($completionLoadingFilePath) ? file_get_contents($completionLoadingFilePath) : '';
-        if (strpos($currentLoading, "source $completionFilePath") !== false) {
-            return true;
-        }
-        if (@file_put_contents($completionLoadingFilePath, "source $completionFilePath\n$currentLoading") === false) {
-            $io->error("Could not write to $completionLoadingFilePath.");
-            return false;
-        }
-        $io->text("$completionFilePath will be loaded by $completionLoadingFilePath.");
-        return true;
+        $io->success('Installed the latest version of symfony console bash completion.');
+        $io->note('Remember to start a new console to activate this changes.');
+        return 0;
     }
 }

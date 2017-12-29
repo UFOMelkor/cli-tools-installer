@@ -46,3 +46,12 @@ shortcuts, a repository index with tab completion, and many other useful
 features.
  
 For further details see https://github.com/ndbroadbent/scm_breeze
+
+## GitHub Hub
+
+Installed via `cli-install git:hub:hub` or `cli-install g:h:h`
+
+hub is a command line tool that wraps git in order to extend it with extra features
+and commands that make working with GitHub easier.
+
+For further details see https://hub.github.com

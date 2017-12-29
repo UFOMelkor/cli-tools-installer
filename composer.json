@@ -22,7 +22,10 @@
         "guzzlehttp/guzzle": "^6.2",
         "piwik/ini": "^1.0",
         "twig/twig": "^1.24",
-        "cpliakas/git-wrapper": "^1.7"
+        "cpliakas/git-wrapper": "^1.7",
+        "knplabs/github-api": "^2.7",
+        "php-http/guzzle6-adapter": "^1.1",
+        "alchemy/zippy": "^0.4.8"
     },
     "require-dev": {
         "couscous/couscous": "^1.5"
