@@ -108,7 +108,7 @@ HELP
         }, $tools));
         $script = "$composerBinDir/symfony-autocomplete --disable-default-tools $aliases";
 
-        if (! $this->completions->installBashCompletionFromEval($io, 'symfony_bash_completion', $script)) {
+        if (! $this->completions->installBashCompletionFromEval($io, 'symfony', $script)) {
             return 1;
         }
         $io->success('Installed the latest version of symfony console bash completion.');

@@ -83,7 +83,7 @@ HELP
         }
         $script = trim($script . "\ncomplete -F _composer $alias\n");
 
-        if (! $this->completions->installBashCompletionScript($io, 'composer_bash_completion', $script)) {
+        if (! $this->completions->installBashCompletionScript($io, 'composer', $script)) {
             return 1;
         }
 

@@ -28,7 +28,7 @@ class BashCompletionInstaller
         if (! is_dir($target)) {
             $completionLoadingFilePath = $target;
             $target = dirname($target);
-            $name = ".php_cli_tools_{$name}";
+            $name = ".php_cli_tools_{$name}_completion";
         }
         $target = "$target/$name";
         if (! $this->createOrUpdateCompletionFile($io, $target, $script)) {

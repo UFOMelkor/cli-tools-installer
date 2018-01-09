@@ -1,33 +1,22 @@
 <?php
 declare(strict_types=1);
+
 namespace UFOMelkor\CliTools;
 
-use Alchemy\Zippy\Zippy;
-use function array_column;
-use function array_filter;
-use function array_reduce;
-use function array_search;
-use function file_get_contents;
-use function file_put_contents;
-use function fputs;
-use function fwrite;
-use Github\Client;
-use function is_array;
-use function mkdir;
-use const PHP_OS;
-use RuntimeException;
+use function chmod;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Throwable;
-use function tmpfile;
 use UFOMelkor\CliTools\Archive\ReleaseFetcher;
 use UFOMelkor\CliTools\Config\Config;
 use UFOMelkor\CliTools\Installers\AliasInstaller;
 use UFOMelkor\CliTools\Installers\BashCompletionInstaller;
-use function var_dump;
+use const PHP_OS;
+use function array_reduce;
+use function array_search;
 
 class InstallGithubHub extends Command
 {
@@ -101,6 +90,7 @@ HELP
         try {
             $io->note('Installing hub to ' . $this->config->getBinDirectory($io) . '/hub');
             $asset->copy('bin/hub', $this->config->getBinDirectory($io) . '/hub');
+            chmod($this->config->getBinDirectory($io) . '/hub', 0755);
             $io->note('Successfully installed hub');
             $io->note('Installing bash completion for hub');
             if (! $this->completions->installBashCompletionScript(
